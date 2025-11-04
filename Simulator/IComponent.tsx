@@ -7,5 +7,6 @@ export default interface IComponent {
     clock: Iclock;
 
     tick(): void;
+    preTick(): void;
     getBuffer(): number | null;
 }

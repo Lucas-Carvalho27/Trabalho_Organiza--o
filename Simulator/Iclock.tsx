@@ -2,6 +2,7 @@ import type IComponent from "./IComponent";
 
 export default interface Iclock {
     name: string;
+    ticks: number;
     components: IComponent[];
 
     tick(): void

@@ -4,29 +4,27 @@ import type Iclock from "../Iclock";
 export default class Adder extends BaseComponent {
     type: string = "Adder";
     value: number | null = null;
-    sum: number;
-    clockCounter: number = 0;
+    nextValue: number | null = null;
 
-    constructor(time: number, name: string, clock: Iclock, sum: number) {
-        super(time, name, clock);
-        this.sum = sum;
+    constructor(name: string, clock: Iclock) {
+        super(name, clock);
     }
 
-    handle(): void {
-        console.log(`${this.name} executado`);
-
-        const result = (this.inputs?.[0]?.getBuffer?.() ?? 0) + this.sum;
-
-        this.buffer = result;
-
-        console.log(`${this.name} executado, com valor: ${this.buffer}`);
-        this.clockCounter = 0;
+    override preTick(): void {
+        if (this.clock.ticks % this.time === 0) {
+            const inputVal1 = Number(this.inputs?.[0]?.getBuffer?.() ?? 0);
+            const inputVal2 = Number(this.inputs?.[1]?.getBuffer?.() ?? 0);
+            this.nextValue = inputVal1 + inputVal2;
+            console.log(`${this.name}: pré-cálculo -> nextValue=${this.nextValue}`);
+        }
     }
 
     override tick(): void {
-        this.clockCounter += 1;
-        if (this.clockCounter >= this.time) {
-            this.handle();
+        if (this.nextValue !== null) {
+            this.buffer = this.nextValue;
+            this.value = this.nextValue;
+            console.log(`${this.name}: commit -> buffer=${this.buffer}`);
+            this.nextValue = null;
         }
     }
 }

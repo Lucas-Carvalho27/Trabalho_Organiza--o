@@ -3,13 +3,13 @@ import type Iclock from "./Iclock";
 
 export class BaseComponent implements IComponent {
     buffer: number | null = null;
-    time: number;
+    time: number = 1;
     name: string;
     inputs: IComponent[];
     outputs: IComponent[];
     clock: Iclock;
 
-    constructor(time: number, name: string, clock: Iclock) {
+    constructor(name: string, clock: Iclock, time: number = 1) {
         this.name = name;
         this.clock = clock;
         this.time = time;
@@ -39,6 +39,10 @@ export class BaseComponent implements IComponent {
     disconnect(target: IComponent): void {
         this.outputs = this.outputs.filter(o => o !== target);
         target.inputs = target.inputs.filter(i => i !== this);
+    }
+
+    preTick(): void {
+
     }
 
     tick(): void {
