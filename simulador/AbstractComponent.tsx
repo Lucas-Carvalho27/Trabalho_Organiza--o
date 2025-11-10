@@ -1,7 +1,6 @@
-import IBarramento from "./Ibarramento";
-import Iclock from "./Iclock";
-import Icomponent from "./IComponent";
-import IInputOutput from "./IInputoutPut";
+import type Iclock from "./Iclock";
+import type Icomponent from "./IComponent";
+import type IInputOutput from "./IInputoutPut";
 
 export default abstract class AbstractComponent implements Icomponent, Iclock, IInputOutput {
     clockCycle: number = 0;

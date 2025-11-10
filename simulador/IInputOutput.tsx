@@ -1,4 +1,4 @@
 export default interface IInputOutput {
-    receiveData(data: number): void;
+    receiveData(data: number): boolean;
     sendData(): void;
 }

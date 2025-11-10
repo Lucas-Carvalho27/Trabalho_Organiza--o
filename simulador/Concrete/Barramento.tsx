@@ -1,7 +1,7 @@
-import IBarramento from "../Ibarramento";
-import Iclock from "../Iclock";
+import type IBarramento from "../Ibarramento";
+import type Iclock from "../Iclock";
 import AbstractComponent from "../AbstractComponent";
-import IInputOutput from "../IInputoutPut";
+import type IInputOutput from "../IInputoutPut";
 
 export default class Barramento implements IBarramento, Iclock, IInputOutput {
     isBusy: boolean = false;
@@ -11,15 +11,28 @@ export default class Barramento implements IBarramento, Iclock, IInputOutput {
     receiveData(data: number): boolean {
         if (!this.isBusy) {
             this.data = data;
+            this.isBusy = true;
             return true
         }
         else {
             return false;
         }
     }
-    sendData(): number {
-        return 0;
 
+    sendData(): void {
+        let sent = false;
+        for (const component of this.destinationComponent) {
+            const accepted = component.receiveData(this.data!);
+            if (accepted) sent = true;
+        }
+        if (sent) {
+            this.data = null;
+            this.isBusy = false;
+        }
+    }
+
+    addDestination(compoment: AbstractComponent) {
+        this.destinationComponent.push(compoment)
     }
 
     addOrigin(compoment: AbstractComponent) {
