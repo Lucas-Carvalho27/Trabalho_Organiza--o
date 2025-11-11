@@ -13,17 +13,18 @@ export default class InstructionQueue extends AbstractComponent {
     //caso o barramento esteja ocupado, a instrução permanece na fila
     //caso o barramento esteja livre, a instrução é removida da fila
     override sendData(): void {
-        let opCode = this.instructionBuffer[0];
+        let data = this.instructionBuffer[0];
+        let opCode = (data >> 26) & 0x3F;
         let result = false;
         if (opCode == 35) {
-            result = this.out[0].receiveData(opCode);
+            result = this.out[0].receiveData(data);
         }
         else {
-            result = this.out[1].receiveData(opCode);
+            result = this.out[1].receiveData(data);
         }
-        if (result) {
-            this.instructionBuffer.shift();
-        }
+
+        this.instructionBuffer.shift();
+
     }
 
     override performOperation(): void {

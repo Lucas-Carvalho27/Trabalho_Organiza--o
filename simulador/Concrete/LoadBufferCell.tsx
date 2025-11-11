@@ -1,4 +1,5 @@
 export default class LoadBufferCell {
+    isBusy: boolean = false;
     opCode: number;
     rs: number;
     rt: number;

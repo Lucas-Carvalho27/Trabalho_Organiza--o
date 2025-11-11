@@ -4,12 +4,14 @@ import LoadBufferCell from "./LoadBufferCell";
 export default class LoadBuffer extends AbstractComponent {
     loadBufferSize: number;
     loadBuffer: LoadBufferCell[] = [];
+    // out[0] é o barramento para o Memory Unit nao possui outras saidas
 
     constructor(clockCyclesToWait: number, loadBufferSize: number,) {
         super(clockCyclesToWait);
         this.loadBufferSize = loadBufferSize;
     }
 
+    //decompõe a instrução recebida em seus componentes e tenta adicionar uma nova célula ao Load Buffer
     override receiveData(data: number): boolean {
         let [opCode, rs, rt, offset] = [
             (data >> 26) & 0x3F,
@@ -17,6 +19,7 @@ export default class LoadBuffer extends AbstractComponent {
             (data >> 16) & 0x1F,
             data & 0xFFFF
         ];
+
         return this.addLoadBufferCell(opCode, rs, rt, offset);
     }
 
@@ -30,5 +33,14 @@ export default class LoadBuffer extends AbstractComponent {
         }
     }
 
+    override performOperation(): void {
 
+    }
+
+    printLoadBuffer(): void {
+        console.log("Load Buffer State:");
+        this.loadBuffer.forEach((cell, index) => {
+            console.log(`Cell ${index}: OpCode=${cell.opCode}, Rs=${cell.rs}, Rt=${cell.rt}, Offset=${cell.offset}`);
+        });
+    }
 }

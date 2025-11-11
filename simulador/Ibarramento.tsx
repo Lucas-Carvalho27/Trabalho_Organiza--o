@@ -1,4 +1,4 @@
-import Icomponent from "./IComponent";
+import type Icomponent from "./IComponent";
 
 
 

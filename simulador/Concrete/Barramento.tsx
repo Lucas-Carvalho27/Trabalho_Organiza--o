@@ -8,8 +8,12 @@ export default class Barramento implements IBarramento, Iclock, IInputOutput {
     data: number | null = null;
     originComponent: AbstractComponent[] = [];
     destinationComponent: AbstractComponent[] = [];
+
+
+
     receiveData(data: number): boolean {
         if (!this.isBusy) {
+            console.log("Barramento received data:", data);
             this.data = data;
             this.isBusy = true;
             return true
@@ -20,14 +24,9 @@ export default class Barramento implements IBarramento, Iclock, IInputOutput {
     }
 
     sendData(): void {
-        let sent = false;
+        console.log("Barramento sending data:", this.data);
         for (const component of this.destinationComponent) {
-            const accepted = component.receiveData(this.data!);
-            if (accepted) sent = true;
-        }
-        if (sent) {
-            this.data = null;
-            this.isBusy = false;
+            component.receiveData(this.data!);
         }
     }
 
@@ -40,6 +39,11 @@ export default class Barramento implements IBarramento, Iclock, IInputOutput {
     }
 
     tick(): void {
-        this.sendData()
+        if (this.isBusy) {
+            this.sendData();
+            this.isBusy = false;
+        }
+
+
     }
 }
